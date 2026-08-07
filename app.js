@@ -24,11 +24,27 @@
         document.querySelectorAll('[data-i18n]').forEach(function(el) {
             const key = el.getAttribute('data-i18n');
             if (dict[key]) {
-                // Preserve inner code elements
-                if (el.querySelector('code')) {
-                    // For elements with code tags, we need careful handling
-                    // Just set text for now
-                    el.textContent = dict[key];
+                var codeEls = el.querySelectorAll('code');
+                if (codeEls.length > 0) {
+                    // Element has <code> children. Preserve their text content
+                    // and rebuild the translated string with <code> elements intact.
+                    var codeTexts = Array.from(codeEls).map(function(c) { return c.textContent; });
+                    var translated = dict[key];
+                    // Build regex to split translated text by code values
+                    var escaped = codeTexts.map(function(t) { return t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); });
+                    var pattern = new RegExp('(' + escaped.join('|') + ')', 'g');
+                    var parts = translated.split(pattern);
+
+                    el.textContent = '';
+                    parts.forEach(function(part) {
+                        if (codeTexts.indexOf(part) !== -1) {
+                            var code = document.createElement('code');
+                            code.textContent = part;
+                            el.appendChild(code);
+                        } else if (part) {
+                            el.appendChild(document.createTextNode(part));
+                        }
+                    });
                 } else {
                     el.textContent = dict[key];
                 }
