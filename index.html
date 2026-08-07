@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prime Agent Guide — Interactive Architecture & Multilingual Documentation</title>
+    <meta name="description" content="An interactive, in-depth, multilingual (English/Korean) guide to Prime Agent — the RLM-native terminal coding and research harness by Prime Intellect.">
+    <meta name="keywords" content="Prime Agent, RLM, IPython, AI Agent, Recursive Language Model, Prime Intellect, coding agent, terminal agent">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Prime Agent Guide">
+    <meta property="og:description" content="Interactive multilingual guide to Prime Agent's architecture, concepts, and deep dive.">
+    <meta property="og:type" content="website">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Progress Bar -->
+    <div class="progress-bar" id="progressBar"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#hero" class="nav-logo">
+                <svg class="logo-icon" viewBox="0 0 100 100" width="28" height="28">
+                    <path d="M50 5 L20 20 L5 50 L20 80 L50 95 L80 80 L95 50 L80 20 Z" fill="none" stroke="url(#logoGrad)" stroke-width="3"/>
+                    <path d="M50 25 C35 25 25 35 25 50 C25 65 35 75 50 75 C65 75 75 65 75 50 C75 35 65 25 50 25" fill="url(#logoGrad)" opacity="0.15"/>
+                    <circle cx="50" cy="50" r="8" fill="url(#logoGrad)"/>
+                    <defs>
+                        <linearGradient id="logoGrad" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0%" stop-color="#06b6d4"/>
+                            <stop offset="100%" stop-color="#8b5cf6"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span class="nav-title">Prime Agent</span>
+            </a>
+
+            <div class="nav-links" id="navLinks">
+                <a href="#what-is" data-i18n="nav.what">What is it?</a>
+                <a href="#quick-start" data-i18n="nav.start">Quick Start</a>
+                <a href="#concepts" data-i18n="nav.concepts">Concepts</a>
+                <a href="#architecture" data-i18n="nav.architecture">Architecture</a>
+                <a href="#rlm" data-i18n="nav.rlm">RLM</a>
+                <a href="#skills" data-i18n="nav.skills">Skills</a>
+                <a href="#sessions" data-i18n="nav.sessions">Sessions</a>
+                <a href="#providers" data-i18n="nav.providers">Providers</a>
+            </div>
+
+            <div class="nav-right">
+                <div class="lang-toggle">
+                    <button class="lang-btn active" data-lang="en">EN</button>
+                    <button class="lang-btn" data-lang="ko">한국어</button>
+                </div>
+                <button class="nav-menu-toggle" id="menuToggle" aria-label="Toggle menu">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="#what-is" data-i18n="nav.what">What is it?</a>
+        <a href="#quick-start" data-i18n="nav.start">Quick Start</a>
+        <a href="#concepts" data-i18n="nav.concepts">Concepts</a>
+        <a href="#architecture" data-i18n="nav.architecture">Architecture</a>
+        <a href="#rlm" data-i18n="nav.rlm">RLM</a>
+        <a href="#skills" data-i18n="nav.skills">Skills</a>
+        <a href="#sessions" data-i18n="nav.sessions">Sessions</a>
+        <a href="#providers" data-i18n="nav.providers">Providers</a>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <canvas id="heroCanvas"></canvas>
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span class="version-pill">v0.7.0</span>
+                <span class="license-pill">MIT License</span>
+            </div>
+            <h1 class="hero-title">
+                <span class="gradient-text">Prime Agent</span>
+            </h1>
+            <p class="hero-subtitle" data-i18n="hero.subtitle">
+                An RLM-native terminal coding and research harness built around a persistent IPython kernel, recursive subagents, and a multi-process local runtime.
+            </p>
+            <div class="hero-cta">
+                <a href="#quick-start" class="btn btn-primary" data-i18n="hero.cta1">Get Started</a>
+                <a href="https://github.com/PrimeIntellect-ai/prime-agent" target="_blank" rel="noopener" class="btn btn-secondary">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                    <span data-i18n="hero.cta2">View on GitHub</span>
+                </a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat">
+                    <span class="stat-number">1</span>
+                    <span class="stat-label" data-i18n="hero.stat1">Built-in Tool</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">30+</span>
+                    <span class="stat-label" data-i18n="hero.stat2">Providers</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">∞</span>
+                    <span class="stat-label" data-i18n="hero.stat3">Session Cap</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">MIT</span>
+                    <span class="stat-label" data-i18n="hero.stat4">Open Source</span>
+                </div>
+            </div>
+            <a href="https://notebook.google.com/notebook/c478a17b-a338-4815-96ed-c6a60473b739" 
+               target="_blank" rel="noopener" 
+               class="notebooklm-banner">
+                <span class="notebooklm-icon">📓</span>
+                <div class="notebooklm-text">
+                    <strong data-i18n="hero.notebook">Korean Guide on NotebookLM</strong>
+                    <span data-i18n="hero.notebookDesc">Prime Agent 한국어 가이드 — NotebookLM 인터랙티브 노트북</span>
+                </div>
+                <span class="notebooklm-icon">→</span>
+            </a>
+        </div>
+        <div class="scroll-indicator">
+            <span data-i18n="hero.scroll">Scroll to explore</span>
+            <div class="scroll-arrow"></div>
+        </div>
+    </section>
+
+    <!-- What is Prime Agent -->
+    <section class="section" id="what-is">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag" data-i18n="what.tag">Overview</span>
+                <h2 class="section-title" data-i18n="what.title">What is Prime Agent?</h2>
+                <p class="section-desc" data-i18n="what.desc">
+                    Prime Agent is a terminal-based AI coding and research harness that takes a fundamentally different approach: instead of giving the model dozens of separate tools, it gives it one — a persistent IPython kernel — and lets it compose everything as code.
+                </p>
+            </div>
+
+            <div class="feature-grid">
+                <div class="feature-card reveal">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="32" height="32"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                    </div>
+                    <h3 data-i18n="what.f1.title">Single-Tool Design</h3>
+                    <p data-i18n="what.f1.desc">One built-in tool — <code>ipython</code> — replaces dozens of specialized tools. The model reads files, runs commands, edits code, and delegates work all through a persistent Python kernel.</p>
+                </div>
+
+                <div class="feature-card reveal">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="32" height="32"><path d="M12 2v20M2 12h20M5 5l14 14M19 5L5 19"/></svg>
+                    </div>
+                    <h3 data-i18n="what.f2.title">Recursive Language Model</h3>
+                    <p data-i18n="what.f2.desc">The model can spawn child agents natively via <code>rlm()</code> calls. Each child gets fresh context, inherits capabilities, and runs independently — enabling true parallel work.</p>
+                </div>
+
+                <div class="feature-card reveal">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="32" height="32"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+                    </div>
+                    <h3 data-i18n="what.f3.title">Persistent State</h3>
+                    <p data-i18n="what.f3.desc">Python state survives across turns and compaction. Variables, imports, functions, and parsed data remain available. Sessions persist as tree-structured JSONL files.</p>
+                </div>
+
+                <div class="feature-card reveal">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="32" height="32"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6v6H9z"/></svg>
+                    </div>
+                    <h3 data-i18n="what.f4.title">Multi-Process Runtime</h3>
+                    <p data-i18n="what.f4.desc">A daemon-backed architecture isolates each session in its own process. Workers continue running after you close the terminal. Crash recovery is built-in.</p>
+                </div>
+
+                <div class="feature-card reveal">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="32" height="32"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+                    </div>
+                    <h3 data-i18n="what.f5.title">Extensible Skills</h3>
+                    <p data-i18n="what.f5.desc">Add capabilities via Agent Skills (markdown or Python-backed). MCP integrations, extensions, themes, and packages create a rich ecosystem without bloating the tool surface.</p>
+                </div>
+
+                <div class="feature-card reveal">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="32" height="32"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                    </div>
+                    <h3 data-i18n="what.f6.title">Built for Long Sessions</h3>
+                    <p data-i18n="what.f6.desc">Heartbeats, scheduled prompts, persistent goals, autonomous mode, and automatic compaction make Prime Agent ideal for long-running, multi-step work.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Start -->
+    <section class="section section-alt" id="quick-start">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag" data-i18n="start.tag">Get Started</span>
+                <h2 class="section-title" data-i18n="start.title">Quick Start</h2>
+                <p class="section-desc" data-i18n="start.desc">From zero to a working Prime Agent session in under a minute.</p>
+            </div>
+
+            <div class="quickstart-grid">
+                <div class="qs-step reveal">
+                    <div class="qs-number">1</div>
+                    <h3 data-i18n="start.s1.title">Install</h3>
+                    <p data-i18n="start.s1.desc">Install on Linux or macOS with a single command:</p>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-dots"><i></i><i></i><i></i></span>
+                            <span class="code-lang">bash</span>
+                            <button class="code-copy" data-i18n="start.copy">Copy</button>
+                        </div>
+                        <pre><code>curl -fsSL https://app.primeintellect.ai/prime-agent/install.sh | sh</code></pre>
+                    </div>
+                </div>
+
+                <div class="qs-step reveal">
+                    <div class="qs-number">2</div>
+                    <h3 data-i18n="start.s2.title">Authenticate</h3>
+                    <p data-i18n="start.s2.desc">Use your subscription or set an API key:</p>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-dots"><i></i><i></i><i></i></span>
+                            <span class="code-lang">bash</span>
+                            <button class="code-copy" data-i18n="start.copy">Copy</button>
+                        </div>
+                        <pre><code># Option A: Subscription login
+prime-agent
+/login
+
+# Option B: API key
+export ANTHROPIC_API_KEY=sk-ant-...
+prime-agent</code></pre>
+                    </div>
+                </div>
+
+                <div class="qs-step reveal">
+                    <div class="qs-number">3</div>
+                    <h3 data-i18n="start.s3.title">Start Working</h3>
+                    <p data-i18n="start.s3.desc">Run it in your project and just start talking:</p>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-dots"><i></i><i></i><i></i></span>
+                            <span class="code-lang">bash</span>
+                            <button class="code-copy" data-i18n="start.copy">Copy</button>
+                        </div>
+                        <pre><code>cd /path/to/project
+prime-agent
+&gt; Summarize this repo and tell me how to run its checks</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="callout reveal">
+                <div class="callout-icon">💡</div>
+                <p data-i18n="start.tip">The Python kernel runtime is set up automatically on first invocation. Set <code>PRIME_AGENT_KERNEL_PYTHON</code> to use an existing Python environment with <code>ipykernel</code>.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Core Concepts (Tabs) -->
+    <section class="section" id="concepts">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag" data-i18n="concepts.tag">Fundamentals</span>
+                <h2 class="section-title" data-i18n="concepts.title">Core Concepts</h2>
+                <p class="section-desc" data-i18n="concepts.desc">The four foundational ideas that make Prime Agent different from every other coding agent.</p>
+            </div>
+
+            <div class="tab-container reveal">
+                <div class="tab-list">
+                    <button class="tab-btn active" data-tab="concept-rlm" data-i18n="concepts.tab1">Single-Tool Design</button>
+                    <button class="tab-btn" data-tab="concept-subagents" data-i18n="concepts.tab2">Recursive Agents</button>
+                    <button class="tab-btn" data-tab="concept-state" data-i18n="concepts.tab3">Persistent State</button>
+                    <button class="tab-btn" data-tab="concept-skills" data-i18n="concepts.tab4">Programmatic Skills</button>
+                </div>
+
+                <div class="tab-content active" id="concept-rlm">
+                    <div class="tab-inner">
+                        <h3 data-i18n="concepts.c1.h">Execution is Programmatic</h3>
+                        <p data-i18n="concepts.c1.p1">Prime Agent's default runtime exposes <strong>one built-in model tool</strong>: <code>ipython</code>. Reading files, editing code, running commands, transforming data, invoking skills, and delegating work all begin from the persistent kernel — not from dozens of separate tool calls.</p>
+                        <p data-i18n="concepts.c1.p2">This means the model doesn't waste context switching between tools. Everything is Python. The model can inspect its environment, build helper functions, compose operations, and maintain working state — exactly like a human developer would in a notebook.</p>
+                        <div class="concept-diagram">
+                            <div class="concept-flow">
+                                <div class="flow-box">Model</div>
+                                <div class="flow-arrow">→</div>
+                                <div class="flow-box flow-box-accent">ipython tool</div>
+                                <div class="flow-arrow">→</div>
+                                <div class="flow-box">IPython Kernel</div>
+                                <div class="flow-arrow">→</div>
+                                <div class="flow-box-group">
+                                    <div class="flow-box flow-box-small">Read files</div>
+                                    <div class="flow-box flow-box-small">Run commands</div>
+                                    <div class="flow-box flow-box-small">Edit code</div>
+                                    <div class="flow-box flow-box-small">Spawn agents</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="code-block">
+                            <div class="code-header"><span class="code-dots"><i></i><i></i><i></i></span><span class="code-lang">python</span></div>
+                            <pre><code><span class="syn-keyword">from</span> pathlib <span class="syn-keyword">import</span> Path
+
+<span class="syn-comment"># Python state persists across turns</span>
+config_files = <span class="syn-func">list</span>(Path(<span class="syn-string">"."</span>).rglob(<span class="syn-string">"*.toml"</span>))
+large_files = [p <span class="syn-keyword">for</span> p <span class="syn-keyword">in</span> config_files <span class="syn-keyword">if</span> p.stat().st_size > <span class="syn-number">10_000</span>]
+
+<span class="syn-comment"># Run project commands</span>
+%%bash
+npm run check</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="concept-subagents">
+                    <div class="tab-inner">
+                        <h3 data-i18n="concepts.c2.h">Subagents are Native RLM Calls</h3>
+                        <p data-i18n="concepts.c2.p1">The callable <code>rlm</code> object is preloaded in the kernel. Spawn a child agent with a direct Python call. It returns immediately after task admission — never the child's answer.</p>
+                        <p data-i18n="concepts.c2.p2">The TypeScript host creates a normal child <code>AgentSession</code> with an independent context and session directory. The child inherits the parent's model, providers, skills, tools, and retry policy.</p>
+                        <div class="code-block">
+                            <div class="code-header"><span class="code-dots"><i></i><i></i><i></i></span><span class="code-lang">python</span></div>
+                            <pre><code><span class="syn-comment"># Spawn independent children — end turn, don't await</span>
+api_review = <span class="syn-keyword">await</span> <span class="syn-func">rlm</span>(<span class="syn-string">"Review the public API"</span>, name=<span class="syn-string">"api-reviewer"</span>)
+test_review = <span class="syn-keyword">await</span> <span class="syn-func">rlm</span>(<span class="syn-string">"Review the test coverage"</span>, name=<span class="syn-string">"test-reviewer"</span>)
+
+<span class="syn-comment"># Children reply via agent_message when done</span>
+<span class="syn-comment"># Results arrive as ordinary messages in later turns</span></code></pre>
+                        </div>
+                        <div class="callout">
+                            <div class="callout-icon">⚡</div>
+                            <p data-i18n="concepts.c2.note">The parent keeps its context focused while children receive only the context needed for their subtasks. This is true parallel fan-out — not sequential tool calls.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="concept-state">
+                    <div class="tab-inner">
+                        <h3 data-i18n="concepts.c3.h">State is Designed to Outlive One Turn</h3>
+                        <p data-i18n="concepts.c3.p1">The RLM programming model assumes useful work may take many turns — or continue after the terminal UI closes:</p>
+                        <ul class="concept-list">
+                            <li data-i18n="concepts.c3.l1">Automatic compaction summarizes older context while preserving recent messages and kernel state</li>
+                            <li data-i18n="concepts.c3.l2">Daemon-backed workers keep sessions running after clients detach</li>
+                            <li data-i18n="concepts.c3.l3">Child registries and session artifacts make subagents recoverable</li>
+                            <li data-i18n="concepts.c3.l4">Heartbeats and scheduled prompts re-enter a session later</li>
+                            <li data-i18n="concepts.c3.l5">Persistent goals continue until the objective is complete</li>
+                            <li data-i18n="concepts.c3.l6">Autonomous mode adds bounded continuations with quality gates</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="concept-skills">
+                    <div class="tab-inner">
+                        <h3 data-i18n="concepts.c4.h">Skills Add Programmatic Capability</h3>
+                        <p data-i18n="concepts.c4.p1">Prime Agent supports the Agent Skills markdown format and extends it with Python-backed skills. Only skill metadata enters the startup prompt — the full <code>SKILL.md</code> loads on demand when a task matches.</p>
+                        <p data-i18n="concepts.c4.p2">A Python-backed skill installs a package into the kernel environment, so the model can import and call it directly — making Python-backed skills a superset of instruction-only skills.</p>
+                        <div class="code-block">
+                            <div class="code-header"><span class="code-dots"><i></i><i></i><i></i></span><span class="code-lang">python</span></div>
+                            <pre><code><span class="syn-comment"># Call a Python-backed skill directly</span>
+report = <span class="syn-keyword">await</span> release_audit(repository=<span class="syn-string">"."</span>, target_version=<span class="syn-string">"0.4.0"</span>)</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Architecture (Interactive) -->
+    <section class="section section-alt" id="architecture">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag" data-i18n="arch.tag">Deep Dive</span>
+                <h2 class="section-title" data-i18n="arch.title">Architecture</h2>
+                <p class="section-desc" data-i18n="arch.desc">Prime Agent separates terminal presentation, process coordination, agent execution, model-facing Python, and persisted state. Click each layer to explore.</p>
+            </div>
+
+            <div class="arch-interactive reveal">
+                <div class="arch-diagram" id="archDiagram">
+                    <!-- Interactive SVG Architecture -->
+                    <svg viewBox="0 0 900 650" class="arch-svg" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Connections -->
+                        <g class="arch-connections" stroke-width="2" fill="none">
+                            <line x1="450" y1="80" x2="450" y2="150" class="arch-line" data-line="1"/>
+                            <line x1="450" y1="200" x2="450" y2="250" class="arch-line" data-line="2"/>
+                            <line x1="200" y1="320" x2="200" y2="370" class="arch-line" data-line="3"/>
+                            <line x1="450" y1="320" x2="450" y2="370" class="arch-line" data-line="4"/>
+                            <line x1="700" y1="320" x2="700" y2="370" class="arch-line" data-line="5"/>
+                            <line x1="200" y1="470" x2="200" y2="510" class="arch-line" data-line="6"/>
+                            <line x1="450" y1="470" x2="450" y2="510" class="arch-line" data-line="7"/>
+                            <line x1="700" y1="470" x2="700" y2="510" class="arch-line" data-line="8"/>
+                        </g>
+
+                        <!-- Layer: Client -->
+                        <g class="arch-node" data-node="client" transform="translate(375, 30)">
+                            <rect width="150" height="50" rx="12" class="arch-node-rect arch-node-client"/>
+                            <text x="75" y="25" text-anchor="middle" fill="white" font-size="13" font-weight="600">Client (TUI)</text>
+                            <text x="75" y="40" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-size="10">Terminal · Print · JSON · RPC</text>
+                        </g>
+
+                        <!-- Layer: Supervisor -->
+                        <g class="arch-node" data-node="supervisor" transform="translate(350, 150)">
+                            <rect width="200" height="50" rx="12" class="arch-node-rect arch-node-supervisor"/>
+                            <text x="100" y="25" text-anchor="middle" fill="white" font-size="13" font-weight="600">Daemon Supervisor</text>
+                            <text x="100" y="40" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-size="10">routing · attachments · recovery</text>
+                        </g>
+
+                        <!-- Layer: Catalog -->
+                        <g class="arch-node" data-node="catalog" transform="translate(100, 260)">
+                            <rect width="180" height="40" rx="10" class="arch-node-rect arch-node-catalog"/>
+                            <text x="90" y="25" text-anchor="middle" fill="white" font-size="12" font-weight="500">Catalog Process</text>
+                        </g>
+
+                        <!-- Layer: Worker -->
+                        <g class="arch-node" data-node="worker" transform="translate(370, 250)">
+                            <rect width="160" height="60" rx="12" class="arch-node-rect arch-node-worker"/>
+                            <text x="80" y="25" text-anchor="middle" fill="white" font-size="13" font-weight="600">Session Worker</text>
+                            <text x="80" y="42" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-size="10">one root session tree</text>
+                            <text x="80" y="54" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-size="10">runtime · scheduler</text>
+                        </g>
+
+                        <!-- Layer: Model Providers -->
+                        <g class="arch-node" data-node="providers" transform="translate(620, 260)">
+                            <rect width="160" height="40" rx="10" class="arch-node-rect arch-node-providers"/>
+                            <text x="80" y="25" text-anchor="middle" fill="white" font-size="12" font-weight="500">Model Providers</text>
+                        </g>
+
+                        <!-- Layer: Session -->
+                        <g class="arch-node" data-node="session" transform="translate(130, 420)">
+                            <rect width="140" height="50" rx="12" class="arch-node-rect arch-node-session"/>
+                            <text x="70" y="25" text-anchor="middle" fill="white" font-size="12" font-weight="600">AgentSession</text>
+                            <text x="70" y="40" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-size="10">provider · tools · compaction</text>
+                        </g>
+
+                        <!-- Layer: Kernel -->
+                        <g class="arch-node" data-node="kernel" transform="translate(380, 420)">
+                            <rect width="140" height="50" rx="12" class="arch-node-rect arch-node-kernel"/>
+                            <text x="70" y="25" text-anchor="middle" fill="white" font-size="12" font-weight="600">IPython Kernel</text>
+                            <text x="70" y="40" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-size="10">model-facing Python</text>
+                        </g>
+
+                        <!-- Layer: Storage -->
+                        <g class="arch-node" data-node="storage" transform="translate(630, 420)">
+                            <rect width="140" height="50" rx="12" class="arch-node-rect arch-node-storage"/>
+                            <text x="70" y="25" text-anchor="middle" fill="white" font-size="12" font-weight="600">Session Storage</text>
+                            <text x="70" y="40" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-size="10">JSONL + artifacts</text>
+                        </g>
+
+                        <!-- Bottom: Child agents -->
+                        <g class="arch-node" data-node="children" transform="translate(130, 530)">
+                            <rect width="640" height="50" rx="12" class="arch-node-rect arch-node-children"/>
+                            <text x="320" y="25" text-anchor="middle" fill="white" font-size="13" font-weight="600">RLM Child Agents</text>
+                            <text x="320" y="40" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-size="10">independent sessions + optional kernels · recursive delegation</text>
+                        </g>
+                    </svg>
+                </div>
+
+                <div class="arch-detail-panel" id="archDetail">
+                    <h3 id="archDetailTitle" data-i18n="arch.click">Click a component above to learn more</h3>
+                    <div id="archDetailContent">
+                        <p data-i18n="arch.clickDesc">Each layer in Prime Agent has clear ownership boundaries. The client owns rendering, the supervisor owns routing, workers own sessions, and IPython is the model's control environment.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- RLM Programming Model -->
+    <section class="section" id="rlm">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag" data-i18n="rlm.tag">The Core Innovation</span>
+                <h2 class="section-title" data-i18n="rlm.title">RLM Programming Model</h2>
+                <p class="section-desc" data-i18n="rlm.desc">Recursive Language Model (RLM) is the programming model at the heart of Prime Agent. The model works inside a persistent Python environment and composes capabilities as code.</p>
+            </div>
+
+            <!-- RLM Loop Visualization -->
+            <div class="rlm-loop reveal">
+                <div class="rlm-loop-center">
+                    <div class="rlm-loop-core">
+                        <span>IPython<br>Kernel</span>
+                    </div>
+                </div>
+                <div class="rlm-loop-item rlm-loop-top">
+                    <div class="rlm-loop-content">
+                        <span class="rlm-loop-num">1</span>
+                        <strong data-i18n="rlm.loop1">Parent Model</strong>
+                        <span class="rlm-loop-detail" data-i18n="rlm.loop1d">Receives task + working context</span>
+                    </div>
+                </div>
+                <div class="rlm-loop-item rlm-loop-right">
+                    <div class="rlm-loop-content">
+                        <span class="rlm-loop-num">2</span>
+                        <strong data-i18n="rlm.loop2">Inspect & Transform</strong>
+                        <span class="rlm-loop-detail" data-i18n="rlm.loop2d">Files · data · shell commands</span>
+                    </div>
+                </div>
+                <div class="rlm-loop-item rlm-loop-bottom">
+                    <div class="rlm-loop-content">
+                        <span class="rlm-loop-num">3</span>
+                        <strong data-i18n="rlm.loop3">Spawn Children</strong>
+                        <span class="rlm-loop-detail" data-i18n="rlm.loop3d">rlm() calls for focused work</span>
+                    </div>
+                </div>
+                <div class="rlm-loop-item rlm-loop-left">
+                    <div class="rlm-loop-content">
+                        <span class="rlm-loop-num">4</span>
+                        <strong data-i18n="rlm.loop4">Compose Answer</strong>
+                        <span class="rlm-loop-detail" data-i18n="rlm.loop4d">Synthesize results + continue</span>
+                    </div>
+                </div>
+                <!-- Orbit arrows -->
+                <svg class="rlm-loop-arrows" viewBox="0 0 400 400">
+                    <circle cx="200" cy="200" r="140" fill="none" stroke="url(#loopGrad)" stroke-width="2" stroke-dasharray="8 8" class="loop-circle"/>
+                    <defs>
+                        <linearGradient id="loopGrad" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0%" stop-color="#06b6d4" stop-opacity="0.4"/>
+                            <stop offset="100%" stop-color="#8b5cf6" stop-opacity="0.4"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+            </div>
+
+            <!-- Host Bridge -->
+            <div class="rlm-bridge reveal">
+                <h3 data-i18n="rlm.bridge.title">The Host Bridge</h3>
+                <p data-i18n="rlm.bridge.desc">Python skills use typed host requests for capabilities whose authoritative state belongs outside the kernel. Provider calls, session persistence, child lifecycles, scheduling, and safety policy remain in the TypeScript host. IPython is purely the model-facing programming surface.</p>
+
+                <div class="bridge-diagram">
+                    <div class="bridge-side bridge-python">
+                        <h4>Python (Kernel)</h4>
+                        <ul>
+                            <li data-i18n="rlm.bridge.p1">rlm() — spawn child agents</li>
+                            <li data-i18n="rlm.bridge.p2">goal — create/complete objectives</li>
+                            <li data-i18n="rlm.bridge.p3">agent_message — family messaging</li>
+                            <li data-i18n="rlm.bridge.p4">compact — context management</li>
+                            <li data-i18n="rlm.bridge.p5">Working state & variables</li>
+                        </ul>
+                    </div>
+                    <div class="bridge-bridge">
+                        <div class="bridge-line"></div>
+                        <span class="bridge-label">host.request</span>
+                        <div class="bridge-arrow-l">←</div>
+                        <div class="bridge-arrow-r">→</div>
+                        <div class="bridge-line"></div>
+                    </div>
+                    <div class="bridge-side bridge-ts">
+                        <h4>TypeScript (Host)</h4>
+                        <ul>
+                            <li data-i18n="rlm.bridge.t1">Provider calls & streaming</li>
+                            <li data-i18n="rlm.bridge.t2">Session persistence (JSONL)</li>
+                            <li data-i18n="rlm.bridge.t3">Child lifecycle & depth limits</li>
+                            <li data-i18n="rlm.bridge.t4">Usage & cost attribution</li>
+                            <li data-i18n="rlm.bridge.t5">Credential management</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Delegation Flow -->
+            <div class="delegation-section reveal">
+                <h3 data-i18n="rlm.del.title">Delegation Flow</h3>
+                <p data-i18n="rlm.del.desc">When the model delegates work via <code>await rlm("subtask")</code>, the call travels through a Jupyter comm target to the TypeScript host, which creates a real child AgentSession.</p>
+
+                <div class="del-flow">
+                    <div class="del-step">
+                        <div class="del-step-num">1</div>
+                        <p data-i18n="rlm.del.s1">Model calls <code>rlm("subtask")</code> in IPython</p>
+                    </div>
+                    <div class="del-arrow">↓</div>
+                    <div class="del-step">
+                        <div class="del-step-num">2</div>
+                        <p data-i18n="rlm.del.s2">Python shim sends <code>host.request</code> via Jupyter comm</p>
+                    </div>
+                    <div class="del-arrow">↓</div>
+                    <div class="del-step">
+                        <div class="del-step-num">3</div>
+                        <p data-i18n="rlm.del.s3">AgentSession checks depth, resolves model, admits child</p>
+                    </div>
+                    <div class="del-arrow">↓</div>
+                    <div class="del-step">
+                        <div class="del-step-num">4</div>
+                        <p data-i18n="rlm.del.s4">Returns spawn handle immediately — never the answer</p>
+                    </div>
+                    <div class="del-arrow">↓</div>
+                    <div class="del-step">
+                        <div class="del-step-num">5</div>
+                        <p data-i18n="rlm.del.s5">Child runs independently, replies via <code>agent_message</code></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section class="section section-alt" id="skills">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag" data-i18n="skills.tag">Extensibility</span>
+                <h2 class="section-title" data-i18n="skills.title">Skills, Extensions & MCP</h2>
+                <p class="section-desc" data-i18n="skills.desc">Prime Agent's extension model keeps the tool surface minimal while enabling unlimited capabilities through skills, extensions, and MCP integrations.</p>
+            </div>
+
+            <div class="skills-grid">
+                <div class="skill-card reveal">
+                    <div class="skill-card-header">
+                        <span class="skill-badge skill-badge-md">Markdown</span>
+                        <h3 data-i18n="skills.s1.title">Agent Skills</h3>
+                    </div>
+                    <p data-i18n="skills.s1.desc">Self-contained capability packages following the <a href="https://agentskills.io" target="_blank">Agent Skills standard</a>. Each skill provides a <code>SKILL.md</code> with on-demand instructions, setup steps, and reference docs.</p>
+                    <div class="code-block code-block-sm">
+                        <div class="code-header"><span class="code-dots"><i></i><i></i><i></i></span><span class="code-lang">SKILL.md</span></div>
+                        <pre><code>---
+name: my-skill
+description: Use this skill when the user asks about X.
+---
+
+# My Skill
+## Steps
+1. Do this
+2. Then that</code></pre>
+                    </div>
+                </div>
+
+                <div class="skill-card reveal">
+                    <div class="skill-card-header">
+                        <span class="skill-badge skill-badge-py">Python</span>
+                        <h3 data-i18n="skills.s2.title">Python-Backed Skills</h3>
+                    </div>
+                    <p data-i18n="skills.s2.desc">A superset of markdown skills with a Python package installed into the kernel. The model can import and call documented functions directly — typed callables, scripts, and dependencies included.</p>
+                    <div class="code-block code-block-sm">
+                        <div class="code-header"><span class="code-dots"><i></i><i></i><i></i></span><span class="code-lang">python</span></div>
+                        <pre><code><span class="syn-comment"># Model calls it directly:</span>
+result = <span class="syn-keyword">await</span> my_skill.run(
+    param=<span class="syn-string">"value"</span>
+)
+<span class="syn-func">help</span>(my_skill)  <span class="syn-comment"># inspect API</span></code></pre>
+                    </div>
+                </div>
+
+                <div class="skill-card reveal">
+                    <div class="skill-card-header">
+                        <span class="skill-badge skill-badge-ts">TypeScript</span>
+                        <h3 data-i18n="skills.s3.title">Extensions</h3>
+                    </div>
+                    <p data-i18n="skills.s3.desc">TypeScript modules that add custom tools, commands, keyboard shortcuts, event handlers, UI components, permission gates, custom compaction, and more.</p>
+                    <div class="code-block code-block-sm">
+                        <div class="code-header"><span class="code-dots"><i></i><i></i><i></i></span><span class="code-lang">typescript</span></div>
+                        <pre><code><span class="syn-keyword">export default function</span>(api) {
+  api.registerTool({
+    name: <span class="syn-string">"deploy"</span>,
+    ...
+  });
+}</code></pre>
+                    </div>
+                </div>
+
+                <div class="skill-card reveal">
+                    <div class="skill-card-header">
+                        <span class="skill-badge skill-badge-mcp">MCP</span>
+                        <h3 data-i18n="skills.s4.title">MCP Integrations</h3>
+                    </div>
+                    <p data-i18n="skills.s4.desc">Connect external services (Linear, Notion, ...) over the Model Context Protocol. Each integration is a Python skill — not a new model tool — keeping the single-tool design intact.</p>
+                    <div class="code-block code-block-sm">
+                        <div class="code-header"><span class="code-dots"><i></i><i></i><i></i></span><span class="code-lang">python</span></div>
+                        <pre><code><span class="syn-keyword">import</span> linear
+issues = <span class="syn-keyword">await</span> linear.list_issues(
+    team=<span class="syn-string">"Engineering"</span>
+)</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="skill-locations reveal">
+                <h3 data-i18n="skills.loc.title">Skill Discovery Locations</h3>
+                <div class="loc-grid">
+                    <div class="loc-item"><span class="loc-badge loc-global">Global</span> <code>~/.prime/agent/skills/</code> · <code>~/.agents/skills/</code></div>
+                    <div class="loc-item"><span class="loc-badge loc-project">Project</span> <code>.prime/agent/skills/</code> · <code>.agents/skills/</code></div>
+                    <div class="loc-item"><span class="loc-badge loc-package">Package</span> <code>skills/</code> directories in Prime Agent packages</div>
+                    <div class="loc-item"><span class="loc-badge loc-builtin">Built-in</span> Shipped with <code>prime-agent</code> (lowest precedence)</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sessions Section -->
+    <section class="section" id="sessions">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag" data-i18n="sessions.tag">Persistence</span>
+                <h2 class="section-title" data-i18n="sessions.title">Sessions & Branching</h2>
+                <p class="section-desc" data-i18n="sessions.desc">Prime Agent saves conversations as tree-structured JSONL files with in-place branching, compaction, and recovery.</p>
+            </div>
+
+            <div class="sessions-grid">
+                <div class="session-feature reveal">
+                    <h3 data-i18n="sessions.f1.title">Tree-Structured Sessions</h3>
+                    <p data-i18n="sessions.f1.desc">Every entry has an <code>id</code> and <code>parentId</code>. Navigate to any previous point, continue from there, and switch between branches — all in a single file. No data is lost.</p>
+                    <div class="tree-viz">
+                        <div class="tree-node tree-user">User: "Hello, can you help..."</div>
+                        <div class="tree-node tree-ai">AI: "Of course! I can..."</div>
+                        <div class="tree-branch-group">
+                            <div class="tree-branch">
+                                <div class="tree-node tree-user">User: "Let's try approach A..."</div>
+                                <div class="tree-node tree-ai">AI: "For approach A..."</div>
+                            </div>
+                            <div class="tree-branch tree-branch-active">
+                                <div class="tree-node tree-user">User: "What about approach B?"</div>
+                                <div class="tree-node tree-ai">AI: "Approach B is..."</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="session-feature reveal">
+                    <h3 data-i18n="sessions.f2.title">Context Compaction</h3>
+                    <p data-i18n="sessions.f2.desc">When conversations grow too long, compaction summarizes older messages while preserving recent work. The kernel state persists through compaction.</p>
+                    <div class="compaction-viz">
+                        <div class="compact-row">
+                            <div class="compact-msg compact-old">msg 1</div>
+                            <div class="compact-msg compact-old">msg 2</div>
+                            <div class="compact-msg compact-old">msg 3</div>
+                            <div class="compact-arrow">→</div>
+                            <div class="compact-summary">[summary]</div>
+                            <div class="compact-msg compact-keep">msg 4</div>
+                            <div class="compact-msg compact-keep">msg 5</div>
+                            <div class="compact-msg compact-keep">msg 6</div>
+                        </div>
+                        <div class="compact-legend">
+                            <span><span class="legend-dot legend-old"></span> <span data-i18n="sessions.legend1">Summarized</span></span>
+                            <span><span class="legend-dot legend-summary"></span> <span data-i18n="sessions.legend2">Summary</span></span>
+                            <span><span class="legend-dot legend-keep"></span> <span data-i18n="sessions.legend3">Retained</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="session-feature reveal">
+                    <h3 data-i18n="sessions.f3.title">Session Commands</h3>
+                    <p data-i18n="sessions.f3.desc">Powerful slash commands for managing your work:</p>
+                    <div class="cmd-list">
+                        <div class="cmd-item"><code>/tree</code> <span data-i18n="sessions.cmd1">Navigate session tree</span></div>
+                        <div class="cmd-item"><code>/fork</code> <span data-i18n="sessions.cmd2">Branch from any point</span></div>
+                        <div class="cmd-item"><code>/clone</code> <span data-i18n="sessions.cmd3">Duplicate active branch</span></div>
+                        <div class="cmd-item"><code>/compact</code> <span data-i18n="sessions.cmd4">Summarize old context</span></div>
+                        <div class="cmd-item"><code>/resume</code> <span data-i18n="sessions.cmd5">Browse past sessions</span></div>
+                        <div class="cmd-item"><code>/share</code> <span data-i18n="sessions.cmd6">Upload as gist</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Long-Running Agents -->
+    <section class="section section-alt" id="long-running">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag" data-i18n="long.tag">Autonomous Work</span>
+                <h2 class="section-title" data-i18n="long.title">Long-Running Agents</h2>
+                <p class="section-desc" data-i18n="long.desc">Prime Agent combines daemon-backed workers with persistent state, scheduled prompts, direct messaging, goals, and bounded autonomous continuations.</p>
+            </div>
+
+            <div class="lr-grid">
+                <div class="lr-card reveal">
+                    <div class="lr-icon">🖥️</div>
+                    <h3 data-i18n="long.f1.title">Daemon-Backed Workers</h3>
+                    <p data-i18n="long.f1.desc">Closing the terminal detaches the client — it doesn't stop the worker. Sessions continue running. Reconnect anytime with <code>prime-agent attach</code>.</p>
+                </div>
+                <div class="lr-card reveal">
+                    <div class="lr-icon">💓</div>
+                    <h3 data-i18n="long.f2.title">Heartbeats</h3>
+                    <p data-i18n="long.f2.desc">Recurring instructions that re-enter a session on a schedule. User-owned <code>/heartbeat</code> or agent-managed <code>rlm_heartbeat</code>.</p>
+                </div>
+                <div class="lr-card reveal">
+                    <div class="lr-icon">🎯</div>
+                    <h3 data-i18n="long.f3.title">Persistent Goals</h3>
+                    <p data-i18n="long.f3.desc">Durable objectives that persist across turns until complete. Track token usage, elapsed time, and continuation count.</p>
+                </div>
+                <div class="lr-card reveal">
+                    <div class="lr-icon">🤖</div>
+                    <h3 data-i18n="long.f4.title">Autonomous Mode</h3>
+                    <p data-i18n="long.f4.desc">Bounded host policy for unattended runs. Continues until quality gates pass or limits (turns, tokens, time) are reached.</p>
+                </div>
+                <div class="lr-card reveal">
+                    <div class="lr-icon">📨</div>
+                    <h3 data-i18n="long.f5.title">Agent Messaging</h3>
+                    <p data-i18n="long.f5.desc">The daemon routes messages between active sessions. Send from CLI: <code>prime-agent send</code>, or from kernel: <code>agent_message.send()</code>.</p>
+                </div>
+                <div class="lr-card reveal">
+                    <div class="lr-icon">⏰</div>
+                    <h3 data-i18n="long.f6.title">Scheduled Prompts</h3>
+                    <p data-i18n="long.f6.desc">One-time or cron-based prompts for any agent. Persisted per session, continue while detached. <code>prime-agent schedule</code>.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Providers -->
+    <section class="section" id="providers">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag" data-i18n="prov.tag">Connectivity</span>
+                <h2 class="section-title" data-i18n="prov.title">Providers & Models</h2>
+                <p class="section-desc" data-i18n="prov.desc">Prime Agent supports 30+ providers through subscription login or API keys. Use any model from any supported provider.</p>
+            </div>
+
+            <div class="provider-section reveal">
+                <div class="provider-tabs">
+                    <button class="prov-tab active" data-prov-tab="subscription" data-i18n="prov.sub">Subscriptions</button>
+                    <button class="prov-tab" data-prov-tab="apikey" data-i18n="prov.api">API Keys</button>
+                </div>
+
+                <div class="prov-content active" id="prov-subscription">
+                    <div class="prov-grid">
+                        <div class="prov-item"><span class="prov-logo">🤖</span> Anthropic Claude Pro/Max</div>
+                        <div class="prov-item"><span class="prov-logo">🟢</span> OpenAI ChatGPT Plus/Pro</div>
+                        <div class="prov-item"><span class="prov-logo">🐙</span> GitHub Copilot</div>
+                    </div>
+                </div>
+
+                <div class="prov-content" id="prov-apikey">
+                    <div class="prov-grid">
+                        <div class="prov-item">Anthropic</div>
+                        <div class="prov-item">OpenAI</div>
+                        <div class="prov-item">Prime Inference</div>
+                        <div class="prov-item">Azure OpenAI</div>
+                        <div class="prov-item">DeepSeek</div>
+                        <div class="prov-item">Google Gemini</div>
+                        <div class="prov-item">Google Vertex</div>
+                        <div class="prov-item">Amazon Bedrock</div>
+                        <div class="prov-item">Mistral</div>
+                        <div class="prov-item">Groq</div>
+                        <div class="prov-item">Cerebras</div>
+                        <div class="prov-item">Cloudflare AI</div>
+                        <div class="prov-item">xAI</div>
+                        <div class="prov-item">OpenRouter</div>
+                        <div class="prov-item">Vercel AI Gateway</div>
+                        <div class="prov-item">ZAI</div>
+                        <div class="prov-item">Hugging Face</div>
+                        <div class="prov-item">Fireworks</div>
+                        <div class="prov-item">Kimi</div>
+                        <div class="prov-item">MiniMax</div>
+                        <div class="prov-item">Xiaomi MiMo</div>
+                        <div class="prov-item">+ more</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CLI Reference -->
+    <section class="section section-alt" id="cli">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag" data-i18n="cli.tag">Reference</span>
+                <h2 class="section-title" data-i18n="cli.title">CLI Quick Reference</h2>
+                <p class="section-desc" data-i18n="cli.desc">Essential commands for working with Prime Agent.</p>
+            </div>
+
+            <div class="cli-grid reveal">
+                <div class="cli-category">
+                    <h3 data-i18n="cli.cat1">Session Management</h3>
+                    <div class="cmd-row"><code>prime-agent</code> <span data-i18n="cli.c1a">Start interactive session</span></div>
+                    <div class="cmd-row"><code>prime-agent -c</code> <span data-i18n="cli.c1b">Continue most recent</span></div>
+                    <div class="cmd-row"><code>prime-agent -r [id]</code> <span data-i18n="cli.c1c">Resume or browse sessions</span></div>
+                    <div class="cmd-row"><code>prime-agent -p "prompt"</code> <span data-i18n="cli.c1d">Print mode (one-shot)</span></div>
+                </div>
+                <div class="cli-category">
+                    <h3 data-i18n="cli.cat2">Agent Control</h3>
+                    <div class="cmd-row"><code>prime-agent list</code> <span data-i18n="cli.c2a">List active agents</span></div>
+                    <div class="cmd-row"><code>prime-agent attach &lt;agent&gt;</code> <span data-i18n="cli.c2b">Attach to agent</span></div>
+                    <div class="cmd-row"><code>prime-agent stop &lt;agent&gt;</code> <span data-i18n="cli.c2c">Stop one agent</span></div>
+                    <div class="cmd-row"><code>prime-agent shutdown</code> <span data-i18n="cli.c2d">Stop all agents</span></div>
+                </div>
+                <div class="cli-category">
+                    <h3 data-i18n="cli.cat3">Model Options</h3>
+                    <div class="cmd-row"><code>--provider &lt;name&gt;</code> <span data-i18n="cli.c3a">Select provider</span></div>
+                    <div class="cmd-row"><code>--model &lt;pattern&gt;</code> <span data-i18n="cli.c3b">Select model</span></div>
+                    <div class="cmd-row"><code>--thinking &lt;level&gt;</code> <span data-i18n="cli.c3c">off/minimal/low/medium/high</span></div>
+                    <div class="cmd-row"><code>/model</code> <span data-i18n="cli.c3d">Switch models interactively</span></div>
+                </div>
+                <div class="cli-category">
+                    <h3 data-i18n="cli.cat4">Autonomous</h3>
+                    <div class="cmd-row"><code>--autonomous</code> <span data-i18n="cli.c4a">Enable autonomous mode</span></div>
+                    <div class="cmd-row"><code>--autonomous-gate</code> <span data-i18n="cli.c4b">Quality gate command</span></div>
+                    <div class="cmd-row"><code>--autonomous-max-turns</code> <span data-i18n="cli.c4c">Turn limit</span></div>
+                    <div class="cmd-row"><code>/autonomous on</code> <span data-i18n="cli.c4d">Toggle interactively</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Korean Resources -->
+    <section class="section" id="korean-resources" style="background: linear-gradient(135deg, rgba(139,92,246,0.05), rgba(6,182,212,0.05));">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag" data-i18n="kr.tag">한국어 리소스</span>
+                <h2 class="section-title" data-i18n="kr.title">Korean Resources</h2>
+                <p class="section-desc" data-i18n="kr.desc">Prime Agent를 한국어로 더 깊이 알아볼 수 있는 추가 자료입니다.</p>
+            </div>
+            <div class="reveal" style="max-width: 700px; margin: 0 auto;">
+                <a href="https://notebook.google.com/notebook/c478a17b-a338-4815-96ed-c6a60473b739" 
+                   target="_blank" rel="noopener" 
+                   class="notebooklm-banner" 
+                   style="max-width: 100%; flex-direction: column; text-align: center; padding: 32px;">
+                    <span class="notebooklm-icon" style="font-size: 3rem;">📓</span>
+                    <div class="notebooklm-text" style="text-align: center; margin: 16px 0;">
+                        <strong style="font-size: 1.2rem;" data-i18n="kr.notebook">Prime Agent 한국어 인터랙티브 노트북</strong>
+                        <span style="display: block; margin-top: 8px; line-height: 1.6;" data-i18n="kr.notebookDesc">
+                            NotebookLM에서 제공되는 한국어 프라임 에이전트 인터랙티브 가이드입니다. 
+                            아키텍처, RLM 프로그래밍 모델, 핵심 개념을 한국어로 학습하세요.
+                        </span>
+                    </div>
+                    <span style="background: var(--gradient-primary); color: white; padding: 10px 28px; border-radius: 12px; font-weight: 600; font-size: 0.9rem; margin-top: 8px;" data-i18n="kr.open">NotebookLM 열기 →</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <svg class="logo-icon" viewBox="0 0 100 100" width="40" height="40">
+                        <path d="M50 5 L20 20 L5 50 L20 80 L50 95 L80 80 L95 50 L80 20 Z" fill="none" stroke="url(#footerGrad)" stroke-width="3"/>
+                        <circle cx="50" cy="50" r="8" fill="url(#footerGrad)"/>
+                        <defs><linearGradient id="footerGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#06b6d4"/><stop offset="100%" stop-color="#8b5cf6"/></linearGradient></defs>
+                    </svg>
+                    <div>
+                        <h3>Prime Agent</h3>
+                        <p data-i18n="footer.tagline">RLM-Native Terminal Coding & Research Harness</p>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-col">
+                        <h4 data-i18n="footer.col1">Resources</h4>
+                        <a href="https://github.com/PrimeIntellect-ai/prime-agent" target="_blank">GitHub Repository</a>
+                        <a href="https://app.primeintellect.ai/prime-agent/install.sh" target="_blank">Install Script</a>
+                        <a href="https://agentskills.io" target="_blank">Agent Skills Standard</a>
+                        <a href="https://modelcontextprotocol.io" target="_blank">Model Context Protocol</a>
+                    </div>
+                    <div class="footer-col">
+                        <h4 data-i18n="footer.col2">Documentation</h4>
+                        <a href="https://github.com/PrimeIntellect-ai/prime-agent/blob/main/docs/architecture.md" target="_blank">Architecture</a>
+                        <a href="https://github.com/PrimeIntellect-ai/prime-agent/blob/main/docs/rlm.md" target="_blank">RLM Model</a>
+                        <a href="https://github.com/PrimeIntellect-ai/prime-agent/blob/main/docs/skills.md" target="_blank">Skills</a>
+                        <a href="https://github.com/PrimeIntellect-ai/prime-agent/blob/main/docs/sdk.md" target="_blank">SDK</a>
+                    </div>
+                    <div class="footer-col">
+                        <h4 data-i18n="footer.col3">Prime Intellect</h4>
+                        <a href="https://primeintellect.ai" target="_blank">Website</a>
+                        <a href="https://github.com/PrimeIntellect-ai" target="_blank">GitHub</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p data-i18n="footer.license">MIT Licensed · Forked from pi-mono by Mario Zechner</p>
+                <p data-i18n="footer.guide">This is an unofficial community guide. Prime Agent™ is a product of Prime Intellect.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="i18n.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
