@@ -627,12 +627,9 @@
 
         var definition = tooltip.ko || tooltip.en;
         var escaped = koTerm.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-        // Match the term with capture groups for surrounding chars.
-        // We only accept the match if neither neighbor is a Hangul syllable,
-        // preventing "지속적" from matching inside "지속적인".
-        var regex = new RegExp(
-            "(^|[^\uAC00-\uD7A3])(" + escaped + ")($|[^\uAC00-\uD7A3])", "g"
-        );
+        // Match the term directly. Korean particles (을, 은, 이, 가) attach
+        // to nouns without spaces, so we must NOT use word boundaries.
+        var regex = new RegExp(escaped, "g");
 
         var match;
         var lastIndex = 0;
@@ -641,26 +638,21 @@
 
         while ((match = regex.exec(text)) !== null) {
             found = true;
-            // match[1] = char before term (or empty if start of string)
-            // match[2] = the Korean term itself
-            // match[3] = char after term (or empty if end of string)
-            var matchStart = match.index + (match[1] ? match[1].length : 0);
-            var matchEnd = matchStart + match[2].length;
-
-            if (matchStart > lastIndex) {
-                fragments.push(document.createTextNode(text.slice(lastIndex, matchStart)));
+            if (match.index > lastIndex) {
+                fragments.push(document.createTextNode(text.slice(lastIndex, match.index)));
             }
+            if (!match[0] || match[0].length === 0) continue;
             var span = document.createElement("span");
             span.className = "term-tooltip";
             span.setAttribute("tabindex", "0");
             span.setAttribute("data-term", tooltipKey);
-            span.textContent = match[2];
+            span.textContent = match[0];
             var tipContent = document.createElement("span");
             tipContent.className = "tooltip-content";
             tipContent.textContent = definition;
             span.appendChild(tipContent);
             fragments.push(span);
-            lastIndex = match.index + match[0].length; // full match includes boundary chars
+            lastIndex = match.index + match[0].length;
             if (match.index === regex.lastIndex) regex.lastIndex++;
         }
 
