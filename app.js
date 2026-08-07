@@ -183,7 +183,7 @@
 
                 if (navigator.clipboard) {
                     navigator.clipboard.writeText(text).then(function() {
-                        btn.textContent = '✓';
+                        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" width="14" height="14" style="display:inline;vertical-align:middle"><polyline points="20 6 9 17 4 12"/></svg>';
                         btn.classList.add('copied');
                         setTimeout(function() {
                             btn.textContent = originalText;
@@ -198,7 +198,7 @@
                     textarea.select();
                     document.execCommand('copy');
                     document.body.removeChild(textarea);
-                    btn.textContent = '✓';
+                    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" width="14" height="14" style="display:inline;vertical-align:middle"><polyline points="20 6 9 17 4 12"/></svg>';
                     btn.classList.add('copied');
                     setTimeout(function() {
                         btn.textContent = originalText;
@@ -399,6 +399,10 @@
                 if (activeNode) {
                     activeNode.click();
                 }
+                // Re-process tooltips with new language
+                if (window.__processTooltips) {
+                    window.__processTooltips(lang);
+                }
             });
         });
     }
@@ -438,4 +442,205 @@
     } else {
         init();
     }
+})();
+
+
+
+// ============================================
+// Technical Term Tooltips
+// ============================================
+(function() {
+
+    // Terms to scan for (sorted by length desc to match longer phrases first)
+    const TERM_LIST = [
+        "persistent kernel", "autonomous mode", "session tree", "host request",
+        "context window", "AgentSession", "IPython", "ZeroMQ", "Jupyter",
+        "TypeScript", "JSONL", "compaction", "persistent", "subagent",
+        "heartbeat", "daemon", "worker", "kernel", "token", "skill", "RLM", "MCP"
+    ];
+
+    // Terms that should only be matched as whole words (case-insensitive for some)
+    const CASE_SENSITIVE = new Set([
+        "IPython", "ZeroMQ", "JSONL", "RLM", "MCP", "AgentSession", "TypeScript", "Jupyter"
+    ]);
+
+    // Tags where we should NOT process text
+    const SKIP_TAGS = new Set(["SCRIPT", "STYLE", "CODE", "PRE", "TEXTAREA", "INPUT", "NOSCRIPT"]);
+
+    // Selector for elements to process
+    const PROCESS_SELECTOR = "p, li, td, th, span:not(.tooltip-content):not(.term-tooltip), strong, em, h3, h4";
+
+    function escapeRegex(str) {
+        return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    }
+
+    function wrapTerm(textNode, term, lang) {
+        const text = textNode.nodeValue;
+        const tooltips = (typeof translations !== "undefined" && translations.tooltips) ? translations.tooltips : {};
+        const tooltip = tooltips[term];
+        if (!tooltip) return;
+
+        const definition = tooltip[lang] || tooltip.en;
+        const isCaseSensitive = CASE_SENSITIVE.has(term);
+        const flags = isCaseSensitive ? "g" : "gi";
+        const boundary = "\\b";
+
+        // Use word boundary for single-word terms, literal for multi-word
+        const pattern = boundary + escapeRegex(term) + boundary;
+        const regex = new RegExp(pattern, flags);
+
+        let match;
+        let lastIndex = 0;
+        const fragments = [];
+        let found = false;
+
+        while ((match = regex.exec(text)) !== null) {
+            found = true;
+            // Text before match
+            if (match.index > lastIndex) {
+                fragments.push(document.createTextNode(text.slice(lastIndex, match.index)));
+            }
+            // The matched term wrapped in tooltip span
+            const span = document.createElement("span");
+            span.className = "term-tooltip";
+            span.setAttribute("tabindex", "0");
+            span.setAttribute("data-term", term);
+            span.textContent = match[0];
+
+            const tipContent = document.createElement("span");
+            tipContent.className = "tooltip-content";
+            tipContent.textContent = definition;
+            span.appendChild(tipContent);
+
+            fragments.push(span);
+            lastIndex = match.index + match[0].length;
+
+            // Prevent infinite loop on zero-length matches
+            if (match.index === regex.lastIndex) regex.lastIndex++;
+        }
+
+        if (found && fragments.length > 0) {
+            // Remaining text
+            if (lastIndex < text.length) {
+                fragments.push(document.createTextNode(text.slice(lastIndex)));
+            }
+            // Replace original node with fragments
+            const parent = textNode.parentNode;
+            fragments.forEach(function(frag) {
+                parent.insertBefore(frag, textNode);
+            });
+            parent.removeChild(textNode);
+            return true;
+        }
+        return false;
+    }
+
+    function processElement(el, lang) {
+        // Get all text nodes within this element that aren't inside code/pre
+        const walker = document.createTreeWalker(
+            el,
+            NodeFilter.SHOW_TEXT,
+            {
+                acceptNode: function(node) {
+                    // Skip if parent is a SKIP_TAG
+                    let parent = node.parentNode;
+                    while (parent && parent !== el) {
+                        if (SKIP_TAGS.has(parent.tagName)) {
+                            return NodeFilter.FILTER_REJECT;
+                        }
+                        // Skip if already inside a tooltip
+                        if (parent.classList && parent.classList.contains("term-tooltip")) {
+                            return NodeFilter.FILTER_REJECT;
+                        }
+                        parent = parent.parentNode;
+                    }
+                    // Must have non-trivial text
+                    if (node.nodeValue.trim().length < 3) {
+                        return NodeFilter.FILTER_REJECT;
+                    }
+                    return NodeFilter.FILTER_ACCEPT;
+                }
+            }
+        );
+
+        const textNodes = [];
+        let current;
+        while ((current = walker.nextNode())) {
+            textNodes.push(current);
+        }
+
+        // Process each text node for each term
+        textNodes.forEach(function(node) {
+            // Check if any term appears in this text
+            const text = node.nodeValue;
+            TERM_LIST.forEach(function(term) {
+                // Quick check before regex
+                if (text.toLowerCase().indexOf(term.toLowerCase()) !== -1) {
+                    wrapTerm(node, term, lang);
+                    // After wrapping, node may be removed; get fresh reference
+                    // But only one term per node to avoid nested wrapping issues
+                }
+            });
+        });
+    }
+
+    function processAllTooltips(lang) {
+        const elements = document.querySelectorAll(PROCESS_SELECTOR);
+        elements.forEach(function(el) {
+            // Skip if inside a tooltip already
+            if (el.closest(".term-tooltip") || el.closest(".tooltip-content")) return;
+            // Skip if already processed
+            if (el.getAttribute("data-tooltips-processed") === lang) return;
+
+            processElement(el, lang);
+        });
+
+        // Add flip-down class to tooltips near top of viewport on scroll
+        const tooltips = document.querySelectorAll(".term-tooltip");
+        tooltips.forEach(function(t) {
+            t.addEventListener("mouseenter", function() {
+                const rect = t.getBoundingClientRect();
+                const tip = t.querySelector(".tooltip-content");
+                if (tip) {
+                    // If element is in top 40% of viewport, flip tooltip down
+                    if (rect.top < window.innerHeight * 0.4) {
+                        t.classList.add("flip-down");
+                    } else {
+                        t.classList.remove("flip-down");
+                    }
+                }
+            });
+        });
+    }
+
+    // Re-process tooltips when language changes
+    window.addEventListener("DOMContentLoaded", function() {
+        // Delay to ensure translations are applied first
+        setTimeout(function() {
+            const lang = localStorage.getItem("pa-lang") || "en";
+            processAllTooltips(lang);
+        }, 200);
+    });
+
+    // Expose for language toggle re-processing
+    window.__processTooltips = function(lang) {
+        // Remove old tooltips: unwrap each .term-tooltip, keeping only the term text
+        document.querySelectorAll(".term-tooltip").forEach(function(el) {
+            // Extract just the term text (first text node), discard tooltip content
+            var termText = "";
+            el.childNodes.forEach(function(child) {
+                if (child.nodeType === 3) {
+                    termText += child.nodeValue;
+                }
+            });
+            var textNode = document.createTextNode(termText);
+            var parent = el.parentNode;
+            parent.replaceChild(textNode, el);
+            parent.normalize();
+        });
+        // Process again with new language
+        setTimeout(function() {
+            processAllTooltips(lang);
+        }, 100);
+    };
 })();

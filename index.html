@@ -116,12 +116,12 @@
             <a href="https://notebook.google.com/notebook/c478a17b-a338-4815-96ed-c6a60473b739" 
                target="_blank" rel="noopener" 
                class="notebooklm-banner">
-                <span class="notebooklm-icon">📓</span>
+                <span class="notebooklm-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></span>
                 <div class="notebooklm-text">
                     <strong data-i18n="hero.notebook">Korean Guide on NotebookLM</strong>
                     <span data-i18n="hero.notebookDesc">Prime Agent 한국어 가이드 — NotebookLM 인터랙티브 노트북</span>
                 </div>
-                <span class="notebooklm-icon">→</span>
+                <span class="notebooklm-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
             </a>
         </div>
         <div class="scroll-indicator">
@@ -255,7 +255,7 @@ prime-agent
             </div>
 
             <div class="callout reveal">
-                <div class="callout-icon">💡</div>
+                <div class="callout-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><path d="M9 18h6M10 22h4M12 2a7 7 0 00-4 12.7c.6.5 1 1.3 1 2.1V18h6v-1.2c0-.8.4-1.6 1-2.1A7 7 0 0012 2z"/></svg></div>
                 <p data-i18n="start.tip">The Python kernel runtime is set up automatically on first invocation. Set <code>PRIME_AGENT_KERNEL_PYTHON</code> to use an existing Python environment with <code>ipykernel</code>.</p>
             </div>
         </div>
@@ -329,7 +329,7 @@ test_review = <span class="syn-keyword">await</span> <span class="syn-func">rlm<
 <span class="syn-comment"># Results arrive as ordinary messages in later turns</span></code></pre>
                         </div>
                         <div class="callout">
-                            <div class="callout-icon">⚡</div>
+                            <div class="callout-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
                             <p data-i18n="concepts.c2.note">The parent keeps its context focused while children receive only the context needed for their subtasks. This is true parallel fan-out — not sequential tool calls.</p>
                         </div>
                     </div>
@@ -761,32 +761,32 @@ issues = <span class="syn-keyword">await</span> linear.list_issues(
 
             <div class="lr-grid">
                 <div class="lr-card reveal">
-                    <div class="lr-icon">🖥️</div>
+                    <div class="lr-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="32" height="32"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
                     <h3 data-i18n="long.f1.title">Daemon-Backed Workers</h3>
                     <p data-i18n="long.f1.desc">Closing the terminal detaches the client — it doesn't stop the worker. Sessions continue running. Reconnect anytime with <code>prime-agent attach</code>.</p>
                 </div>
                 <div class="lr-card reveal">
-                    <div class="lr-icon">💓</div>
+                    <div class="lr-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="32" height="32"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
                     <h3 data-i18n="long.f2.title">Heartbeats</h3>
                     <p data-i18n="long.f2.desc">Recurring instructions that re-enter a session on a schedule. User-owned <code>/heartbeat</code> or agent-managed <code>rlm_heartbeat</code>.</p>
                 </div>
                 <div class="lr-card reveal">
-                    <div class="lr-icon">🎯</div>
+                    <div class="lr-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="32" height="32"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
                     <h3 data-i18n="long.f3.title">Persistent Goals</h3>
                     <p data-i18n="long.f3.desc">Durable objectives that persist across turns until complete. Track token usage, elapsed time, and continuation count.</p>
                 </div>
                 <div class="lr-card reveal">
-                    <div class="lr-icon">🤖</div>
+                    <div class="lr-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="32" height="32"><rect x="3" y="8" width="18" height="12" rx="2"/><circle cx="8.5" cy="14" r="1.5"/><circle cx="15.5" cy="14" r="1.5"/><path d="M12 8V4M9 4h6"/></svg></div>
                     <h3 data-i18n="long.f4.title">Autonomous Mode</h3>
                     <p data-i18n="long.f4.desc">Bounded host policy for unattended runs. Continues until quality gates pass or limits (turns, tokens, time) are reached.</p>
                 </div>
                 <div class="lr-card reveal">
-                    <div class="lr-icon">📨</div>
+                    <div class="lr-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="32" height="32"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 6L2 7"/></svg></div>
                     <h3 data-i18n="long.f5.title">Agent Messaging</h3>
                     <p data-i18n="long.f5.desc">The daemon routes messages between active sessions. Send from CLI: <code>prime-agent send</code>, or from kernel: <code>agent_message.send()</code>.</p>
                 </div>
                 <div class="lr-card reveal">
-                    <div class="lr-icon">⏰</div>
+                    <div class="lr-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="32" height="32"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
                     <h3 data-i18n="long.f6.title">Scheduled Prompts</h3>
                     <p data-i18n="long.f6.desc">One-time or cron-based prompts for any agent. Persisted per session, continue while detached. <code>prime-agent schedule</code>.</p>
                 </div>
@@ -811,9 +811,9 @@ issues = <span class="syn-keyword">await</span> linear.list_issues(
 
                 <div class="prov-content active" id="prov-subscription">
                     <div class="prov-grid">
-                        <div class="prov-item"><span class="prov-logo">🤖</span> Anthropic Claude Pro/Max</div>
-                        <div class="prov-item"><span class="prov-logo">🟢</span> OpenAI ChatGPT Plus/Pro</div>
-                        <div class="prov-item"><span class="prov-logo">🐙</span> GitHub Copilot</div>
+                        <div class="prov-item"><span class="prov-logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" style="display:inline;vertical-align:middle;margin-right:4px"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></span> Anthropic Claude Pro/Max</div>
+                        <div class="prov-item"><span class="prov-logo"><svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14" style="display:inline;vertical-align:middle;margin-right:4px"><circle cx="12" cy="12" r="10"/></svg></span> OpenAI ChatGPT Plus/Pro</div>
+                        <div class="prov-item"><span class="prov-logo"><svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14" style="display:inline;vertical-align:middle;margin-right:4px"><path d="M12 2C6.5 2 2 6 2 11c0 2.8 1.4 5.3 3.6 7-.3 1-.8 1.8-1.6 2.3-.3.2-.4.6-.2.9.1.2.4.3.6.2 1.7-.3 3-1 3.9-2 1.1.4 2.3.6 3.7.6s2.6-.2 3.7-.6c.9 1 2.2 1.7 3.9 2 .2 0 .5-.1.6-.3.1-.3 0-.7-.2-.9-.8-.5-1.3-1.3-1.6-2.3C20.6 16.3 22 13.8 22 11c0-5-4.5-9-10-9z"/></svg></span> GitHub Copilot</div>
                     </div>
                 </div>
 
@@ -902,7 +902,7 @@ issues = <span class="syn-keyword">await</span> linear.list_issues(
                    target="_blank" rel="noopener" 
                    class="notebooklm-banner" 
                    style="max-width: 100%; flex-direction: column; text-align: center; padding: 32px;">
-                    <span class="notebooklm-icon" style="font-size: 3rem;">📓</span>
+                    <span class="notebooklm-icon" style="font-size: 3rem;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="48" height="48"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg></span>
                     <div class="notebooklm-text" style="text-align: center; margin: 16px 0;">
                         <strong style="font-size: 1.2rem;" data-i18n="kr.notebook">Prime Agent 한국어 인터랙티브 노트북</strong>
                         <span style="display: block; margin-top: 8px; line-height: 1.6;" data-i18n="kr.notebookDesc">

@@ -482,6 +482,101 @@ const translations = {
     }
 };
 
+
+// ============================================
+// Technical Term Tooltips (EN / KO)
+// ============================================
+translations.tooltips = {
+    IPython: {
+        en: "An interactive Python shell. Prime Agent uses it as a persistent kernel — a long-running Python process where variables, imports, and functions survive across multiple turns.",
+        ko: "대화형 Python 셸. Prime Agent는 이를 지속적 커널로 사용합니다 — 변수, 임포트, 함수가 여러 턴에 걸쳐 살아있는 장기 실행 Python 프로세스입니다."
+    },
+    kernel: {
+        en: "A background process that executes code. In Prime Agent, the IPython kernel is the model's control environment — it stays alive across turns, preserving all Python state (variables, functions, data).",
+        ko: "코드를 실행하는 백그라운드 프로세스. Prime Agent에서 IPython 커널은 모델의 제어 환경입니다 — 모든 Python 상태(변수, 함수, 데이터)를 보존하며 턴에 걸쳐 살아있습니다."
+    },
+    "persistent kernel": {
+        en: "A kernel process that stays alive across multiple model turns. Variables, imports, and function definitions from one turn remain available in all subsequent turns — like a living Jupyter notebook session, not a stateless tool that resets after each call.",
+        ko: "여러 모델 턴에 걸쳐 살아있는 커널 프로세스. 한 턴에서 정의한 변수, 임포트, 함수 정의가 이후 모든 턴에서 그대로 사용 가능합니다 — 호출 후 재설정되는 무상태 도구가 아닌, 살아있는 주피터 노트북 세션과 같습니다."
+    },
+    persistent: {
+        en: "State that survives across turns. A persistent kernel keeps variables, imports, and function definitions available on every subsequent turn — unlike stateless tools that reset after each call.",
+        ko: "턴에 걸쳐 유지되는 상태. 지속적 커널은 변수, 임포트, 함수 정의를 이후 모든 턴에서 사용 가능하게 유지합니다 — 각 호출 후 재설정되는 무상태 도구와 다릅니다."
+    },
+    RLM: {
+        en: "Recursive Language Model. Prime Agent's core programming model where the LLM works inside a persistent Python environment and spawns child agents as native function calls (rlm()), enabling recursive delegation.",
+        ko: "재귀적 언어 모델. Prime Agent의 핵심 프로그래밍 모델로, LLM이 지속적 Python 환경 내에서 작업하며 자식 에이전트를 네이티브 함수 호출(rlm())로 생성하여 재귀적 위임을 가능하게 합니다."
+    },
+    compaction: {
+        en: "Summarizing older conversation messages to free up context window space, while keeping recent messages intact. The kernel's Python state persists through compaction — only the text conversation is summarized.",
+        ko: "컨텍스트 창 공간을 확보하기 위해 오래된 대화 메시지를 요약하면서 최근 메시지는 그대로 유지하는 것. 커널의 Python 상태는 컴팩션을 통해 유지됩니다 — 텍스트 대화만 요약됩니다."
+    },
+    AgentSession: {
+        en: "The TypeScript object that owns the agent loop — provider calls, tool execution, prompt queueing, compaction, child lifecycle, and transcript writes. Each agent (parent or child) has one.",
+        ko: "에이전트 루프를 소유하는 TypeScript 객체 — 프로바이더 호출, 도구 실행, 프롬프트 큐잉, 컴팩션, 자식 라이프사이클, 트랜스크립트 작성. 각 에이전트마다 하나씩 있습니다."
+    },
+    JSONL: {
+        en: "JSON Lines format — one JSON object per line. Prime Agent stores sessions as JSONL files, where each line is a message entry with an id and parentId for tree-structured branching.",
+        ko: "JSON Lines 형식 — 한 줄에 하나의 JSON 객체. Prime Agent는 세션을 JSONL 파일로 저장하며, 각 줄은 트리 구조 브랜칭을 위한 id와 parentId를 가진 메시지 항목입니다."
+    },
+    daemon: {
+        en: "A background process that manages other processes. Prime Agent's daemon supervisor routes requests, monitors worker health, and handles crash recovery — all without user interaction.",
+        ko: "다른 프로세스를 관리하는 백그라운드 프로세스. Prime Agent의 데몬 감독자는 요청을 라우팅하고, 워커 건강을 모니터링하며, 크래시 복구를 처리합니다 — 모두 사용자 개입 없이."
+    },
+    worker: {
+        en: "A separate OS process that owns one root session tree — including the AgentSession, IPython kernel, scheduler, and all child agents. Process-isolated for failure containment.",
+        ko: "하나의 루트 세션 트리를 소유하는 별도 OS 프로세스 — AgentSession, IPython 커널, 스케줄러, 모든 자식 에이전트 포함. 장애 격리를 위해 프로세스 격리됩니다."
+    },
+    ZeroMQ: {
+        en: "A high-performance messaging library used for inter-process communication. Prime Agent uses it for the Jupyter protocol between the TypeScript host and the IPython kernel process.",
+        ko: "프로세스 간 통신에 사용되는 고성능 메시징 라이브러리. Prime Agent는 TypeScript 호스트와 IPython 커널 프로세스 간의 Jupyter 프로토콜에 이를 사용합니다."
+    },
+    Jupyter: {
+        en: "An open-source protocol and ecosystem for interactive computing. Prime Agent uses the Jupyter protocol (over ZeroMQ) to communicate with the IPython kernel via shell, iopub, and control channels.",
+        ko: "대화형 컴퓨팅을 위한 오픈소스 프로토콜 및 생태계. Prime Agent는 Jupyter 프로토콜(ZeroMQ 기반)을 사용하여 IPython 커널과 shell, iopub, control 채널로 통신합니다."
+    },
+    MCP: {
+        en: "Model Context Protocol — an open standard for connecting AI models to external tools and data sources. Prime Agent implements MCP as Python skills, not as new model tools.",
+        ko: "모델 컨텍스트 프로토콜 — AI 모델을 외부 도구 및 데이터 소스에 연결하는 개방형 표준. Prime Agent는 MCP를 새로운 모델 도구가 아닌 Python 스킬로 구현합니다."
+    },
+    "context window": {
+        en: "The maximum number of tokens a model can process in one request. Prime Agent manages this with automatic compaction when the conversation grows too long.",
+        ko: "모델이 한 번의 요청에서 처리할 수 있는 최대 토큰 수. Prime Agent는 대화가 너무 길어지면 자동 컴팩션으로 이를 관리합니다."
+    },
+    TypeScript: {
+        en: "A typed superset of JavaScript. Prime Agent's host runtime (AgentSession, kernel manager, daemon, session storage) is written in TypeScript, while the model works in Python.",
+        ko: "JavaScript의 타입 지원 상위 집합. Prime Agent의 호스트 런타임(AgentSession, 커널 관리자, 데몬, 세션 저장소)은 TypeScript로 작성되며, 모델은 Python으로 작업합니다."
+    },
+    "host request": {
+        en: "A typed message from the Python kernel to the TypeScript host via a Jupyter comm. Used for rlm() spawning, goal management, agent messaging — capabilities whose authoritative state lives in the host.",
+        ko: "Jupyter comm을 통해 Python 커널에서 TypeScript 호스트로 보내는 타입화된 메시지. rlm() 생성, 목표 관리, 에이전트 메시징에 사용됩니다 — 권위 있는 상태가 호스트에 있는 기능들."
+    },
+    token: {
+        en: "A unit of text that the model processes. Roughly 4 characters or 0.75 words in English. Prime Agent tracks token usage for cost attribution and context management.",
+        ko: "모델이 처리하는 텍스트 단위. 영어에서 약 4자 또는 0.75단어. Prime Agent는 비용 귀속 및 컨텍스트 관리를 위해 토큰 사용량을 추적합니다."
+    },
+    subagent: {
+        en: "A child agent created by a parent via rlm(). Gets its own AgentSession, independent context, and optional kernel. Inherits the parent's model and capabilities but runs independently.",
+        ko: "부모가 rlm()을 통해 생성한 자식 에이전트. 자체 AgentSession, 독립적 컨텍스트, 선택적 커널을 가집니다. 부모의 모델과 기능을 상속하지만 독립적으로 실행됩니다."
+    },
+    heartbeat: {
+        en: "A recurring instruction that re-enters a session on a schedule. User-owned (/heartbeat) or agent-managed (rlm_heartbeat). Keeps long-running tasks alive and responsive.",
+        ko: "스케줄에 따라 세션에 재진입하는 반복 지침. 사용자 소유(/heartbeat) 또는 에이전트 관리(rlm_heartbeat). 장기 실행 작업을 살아있고 반응하게 유지합니다."
+    },
+    "autonomous mode": {
+        en: "A host policy where Prime Agent continues working without human input until quality gates pass or limits (turns, tokens, wall-clock time) are reached.",
+        ko: "Prime Agent가 품질 게이트가 통과되거나 제한(턴, 토큰, 경과 시간)에 도달할 때까지 사람 입력 없이 계속 작업하는 호스트 정책."
+    },
+    "session tree": {
+        en: "The branching structure of a session. Every message has an id and parentId, so you can navigate to any point and branch from there without losing history.",
+        ko: "세션의 분기 구조. 모든 메시지는 id와 parentId를 가지므로, 기록을 잝지 않고 어느 시점으로든 이동하여 분기할 수 있습니다."
+    },
+    skill: {
+        en: "A self-contained capability package with a SKILL.md for discovery. Can be markdown-only (instructions) or Python-backed (callable functions installed in the kernel).",
+        ko: "발견을 위한 SKILL.md가 있는 자체 완비형 기능 패키지. 마크다운 전용(지침) 또는 Python 기반(커널에 설치된 호출 가능 함수)일 수 있습니다."
+    },
+};
+
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = translations;
 }
