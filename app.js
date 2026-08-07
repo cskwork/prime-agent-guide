@@ -467,15 +467,20 @@
     // Tags where we should NOT process text
     const SKIP_TAGS = new Set(["SCRIPT", "STYLE", "CODE", "PRE", "TEXTAREA", "INPUT", "NOSCRIPT"]);
 
-    // Selector for elements to process
-    const PROCESS_SELECTOR = "p, li, td, th, span:not(.tooltip-content):not(.term-tooltip), strong, em, h3, h4";
+    // Selector for elements to process — only block-level text containers.
+    // Do NOT include span/strong/em: they are children of p/li and would
+    // cause double-processing and corrupted text nodes.
+    const PROCESS_SELECTOR = "p, li, td, th, h3, h4, dd, dt, blockquote";
 
     function escapeRegex(str) {
         return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     }
 
     function wrapTerm(textNode, term, lang) {
+        // Safety: skip if node is detached or empty
+        if (!textNode || !textNode.parentNode || !textNode.nodeValue) return;
         const text = textNode.nodeValue;
+        if (text.trim().length === 0) return;
         const tooltips = (typeof translations !== "undefined" && translations.tooltips) ? translations.tooltips : {};
         const tooltip = tooltips[term];
         if (!tooltip) return;
@@ -501,6 +506,8 @@
                 fragments.push(document.createTextNode(text.slice(lastIndex, match.index)));
             }
             // The matched term wrapped in tooltip span
+            // Skip empty matches (can happen with edge-case regex)
+            if (!match[0] || match[0].length === 0) continue;
             const span = document.createElement("span");
             span.className = "term-tooltip";
             span.setAttribute("tabindex", "0");
@@ -519,7 +526,7 @@
             if (match.index === regex.lastIndex) regex.lastIndex++;
         }
 
-        if (found && fragments.length > 0) {
+        if (found && fragments.length > 0 && lastIndex > 0) {
             // Remaining text
             if (lastIndex < text.length) {
                 fragments.push(document.createTextNode(text.slice(lastIndex)));
