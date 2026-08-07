@@ -535,26 +535,22 @@
         return false;
     }
 
-    function processElement(el, lang) {
-        // Get all text nodes within this element that aren't inside code/pre
+    function getTextNodes(el) {
         const walker = document.createTreeWalker(
             el,
             NodeFilter.SHOW_TEXT,
             {
                 acceptNode: function(node) {
-                    // Skip if parent is a SKIP_TAG
                     let parent = node.parentNode;
                     while (parent && parent !== el) {
                         if (SKIP_TAGS.has(parent.tagName)) {
                             return NodeFilter.FILTER_REJECT;
                         }
-                        // Skip if already inside a tooltip
                         if (parent.classList && parent.classList.contains("term-tooltip")) {
                             return NodeFilter.FILTER_REJECT;
                         }
                         parent = parent.parentNode;
                     }
-                    // Must have non-trivial text
                     if (node.nodeValue.trim().length < 3) {
                         return NodeFilter.FILTER_REJECT;
                     }
@@ -562,23 +558,25 @@
                 }
             }
         );
-
-        const textNodes = [];
+        const nodes = [];
         let current;
         while ((current = walker.nextNode())) {
-            textNodes.push(current);
+            nodes.push(current);
         }
+        return nodes;
+    }
 
-        // Process each text node for each term
-        textNodes.forEach(function(node) {
-            // Check if any term appears in this text
-            const text = node.nodeValue;
-            TERM_LIST.forEach(function(term) {
-                // Quick check before regex
-                if (text.toLowerCase().indexOf(term.toLowerCase()) !== -1) {
+    function processElement(el, lang) {
+        // Process one term at a time, re-walking DOM each time.
+        // This is robust: after wrapping term A, newly created text nodes
+        // (containing remaining text) are picked up when scanning for term B.
+        TERM_LIST.forEach(function(term) {
+            // Re-collect text nodes for each term (DOM changes between terms)
+            const textNodes = getTextNodes(el);
+            textNodes.forEach(function(node) {
+                // Quick check before expensive regex
+                if (node.nodeValue.toLowerCase().indexOf(term.toLowerCase()) !== -1) {
                     wrapTerm(node, term, lang);
-                    // After wrapping, node may be removed; get fresh reference
-                    // But only one term per node to avoid nested wrapping issues
                 }
             });
         });
