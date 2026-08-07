@@ -410,7 +410,7 @@ const translations = {
         "long.f5.title": "에이전트 메시징",
         "long.f5.desc": "데몬이 활성 세션 간에 메시지를 라우팅합니다. CLI에서: prime-agent send, 또는 커널에서: agent_message.send().",
         "long.f6.title": "예약된 프롬프트",
-        "long.f6.desc": "모든 에이전트에 대한 일회성 또는 cron 기반 프롬프트. 세션별로 영속화되고, 분리된 동안 계속됩니다.",
+        "long.f6.desc": "모든 에이전트에 대한 일회성 또는 cron 기반 프롬프트. 세션별로 영속화되고, 분리된 동안 계속됩니다. prime-agent schedule.",
 
         // Providers
         "prov.tag": "연결성",
