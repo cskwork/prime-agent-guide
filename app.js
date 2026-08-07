@@ -480,6 +480,34 @@
         "IPython", "ZeroMQ", "JSONL", "RLM", "MCP", "AgentSession", "TypeScript", "Jupyter"
     ]);
 
+    // Korean term aliases: map Korean term → tooltip key
+    // When lang is "ko", these are also scanned and wrapped with tooltips.
+    const KO_ALIASES = {
+        "커널": "kernel",
+        "컴팩션": "compaction",
+        "지속적 커널": "persistent kernel",
+        "지속적": "persistent",
+        "데몬": "daemon",
+        "워커": "worker",
+        "서브에이전트": "subagent",
+        "자식 에이전트": "subagent",
+        "하트비트": "heartbeat",
+        "자율 모드": "autonomous mode",
+        "세션 트리": "session tree",
+        "토큰": "token",
+        "스킬": "skill",
+        "컨텍스트 창": "context window",
+        "호스트 요청": "host request",
+    };
+
+    // Reverse mapping: tooltip key → array of Korean terms (sorted by length desc)
+    const KO_ALIAS_KEYS = {};
+    Object.keys(KO_ALIASES).forEach(function(ko) {
+        var key = KO_ALIASES[ko];
+        if (!KO_ALIAS_KEYS[key]) KO_ALIAS_KEYS[key] = [];
+        KO_ALIAS_KEYS[key].push(ko);
+    });
+
     // Tags where we should NOT process text
     const SKIP_TAGS = new Set(["SCRIPT", "STYLE", "CODE", "PRE", "TEXTAREA", "INPUT", "NOSCRIPT"]);
 
@@ -589,17 +617,82 @@
         return nodes;
     }
 
+    function wrapKoreanTerm(textNode, koTerm, tooltipKey, lang) {
+        if (!textNode || !textNode.parentNode || !textNode.nodeValue) return;
+        var text = textNode.nodeValue;
+        if (text.trim().length === 0) return;
+        var tooltips = (typeof translations !== "undefined" && translations.tooltips) ? translations.tooltips : {};
+        var tooltip = tooltips[tooltipKey];
+        if (!tooltip) return;
+
+        var definition = tooltip.ko || tooltip.en;
+        var escaped = koTerm.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        var regex = new RegExp(escaped, "g");
+
+        var match;
+        var lastIndex = 0;
+        var fragments = [];
+        var found = false;
+
+        while ((match = regex.exec(text)) !== null) {
+            found = true;
+            if (match.index > lastIndex) {
+                fragments.push(document.createTextNode(text.slice(lastIndex, match.index)));
+            }
+            if (!match[0] || match[0].length === 0) continue;
+            var span = document.createElement("span");
+            span.className = "term-tooltip";
+            span.setAttribute("tabindex", "0");
+            span.setAttribute("data-term", tooltipKey);
+            span.textContent = match[0];
+            var tipContent = document.createElement("span");
+            tipContent.className = "tooltip-content";
+            tipContent.textContent = definition;
+            span.appendChild(tipContent);
+            fragments.push(span);
+            lastIndex = match.index + match[0].length;
+            if (match.index === regex.lastIndex) regex.lastIndex++;
+        }
+
+        if (found && fragments.length > 0 && lastIndex > 0) {
+            if (lastIndex < text.length) {
+                fragments.push(document.createTextNode(text.slice(lastIndex)));
+            }
+            var parent = textNode.parentNode;
+            fragments.forEach(function(frag) { parent.insertBefore(frag, textNode); });
+            parent.removeChild(textNode);
+        }
+    }
+
     function processElement(el, lang) {
+        // Build the list of terms to scan.
+        // English terms are always scanned (they appear in both languages).
+        // Korean aliases are scanned only when lang === "ko".
+        var terms = TERM_LIST.slice();
+
+        if (lang === "ko") {
+            // Add Korean aliases, sorted by length desc so longer phrases match first
+            var koTerms = Object.keys(KO_ALIASES).sort(function(a, b) { return b.length - a.length; });
+            terms = terms.concat(koTerms);
+        }
+
         // Process one term at a time, re-walking DOM each time.
-        // This is robust: after wrapping term A, newly created text nodes
-        // (containing remaining text) are picked up when scanning for term B.
-        TERM_LIST.forEach(function(term) {
-            // Re-collect text nodes for each term (DOM changes between terms)
-            const textNodes = getTextNodes(el);
+        terms.forEach(function(term) {
+            var textNodes = getTextNodes(el);
             textNodes.forEach(function(node) {
-                // Quick check before expensive regex
-                if (node.nodeValue.toLowerCase().indexOf(term.toLowerCase()) !== -1) {
-                    wrapTerm(node, term, lang);
+                var isKoreanAlias = KO_ALIASES.hasOwnProperty(term);
+                var needle = isKoreanAlias ? term : term.toLowerCase();
+                var haystack = node.nodeValue.toLowerCase();
+
+                // For Korean terms, search case-sensitively in original text
+                if (isKoreanAlias) {
+                    if (node.nodeValue.indexOf(term) !== -1) {
+                        wrapKoreanTerm(node, term, KO_ALIASES[term], lang);
+                    }
+                } else {
+                    if (haystack.indexOf(needle) !== -1) {
+                        wrapTerm(node, term, lang);
+                    }
                 }
             });
         });
@@ -643,25 +736,14 @@
         }, 200);
     });
 
-    // Expose for language toggle re-processing
+    // Expose for language toggle re-processing.
+    // The safe approach: re-run applyTranslations (rebuilds DOM from scratch,
+    // destroying all tooltip spans), then re-process tooltips on clean DOM.
     window.__processTooltips = function(lang) {
-        // Remove old tooltips: unwrap each .term-tooltip, keeping only the term text
-        document.querySelectorAll(".term-tooltip").forEach(function(el) {
-            // Extract just the term text (first text node), discard tooltip content
-            var termText = "";
-            el.childNodes.forEach(function(child) {
-                if (child.nodeType === 3) {
-                    termText += child.nodeValue;
-                }
-            });
-            var textNode = document.createTextNode(termText);
-            var parent = el.parentNode;
-            parent.replaceChild(textNode, el);
-            parent.normalize();
-        });
-        // Process again with new language
-        setTimeout(function() {
-            processAllTooltips(lang);
-        }, 100);
+        // applyTranslations has already been called by setLang() before this.
+        // It rebuilt all data-i18n elements with fresh text + code elements.
+        // All old .term-tooltip spans are already gone because textContent
+        // was reset. Just need to scan and wrap again.
+        processAllTooltips(lang);
     };
 })();
