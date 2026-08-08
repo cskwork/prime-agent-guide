@@ -261,6 +261,61 @@ prime-agent
         </div>
     </section>
 
+    <!-- Windows Setup -->
+    <section class="section" id="windows">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag" data-i18n="win.tag">Windows</span>
+                <h2 class="section-title" data-i18n="win.title">Windows Setup</h2>
+                <p class="section-desc" data-i18n="win.desc">Prime Agent runs on Windows via Git Bash. Two upstream bugs need a one-time fix so the IPython kernel and <code>%%bash</code> cells work.</p>
+            </div>
+
+            <div class="qs-step reveal" style="max-width:780px;margin:0 auto 24px">
+                <h3 data-i18n="win.f1.h">1. Fix the IPython kernel (bootstrap path bug)</h3>
+                <p data-i18n="win.f1.p">prime-agent's first-run bootstrap looks for a Unix venv path (<code>bin/python</code>), which doesn't exist on Windows (<code>Scripts\python.exe</code>) — so the kernel never starts. Bypass it by pointing <code>PRIME_AGENT_KERNEL_PYTHON</code> at a Python that already has <code>ipykernel</code> + <code>prime-agent-runtime</code>.</p>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-dots"><i></i><i></i><i></i></span>
+                        <span class="code-lang">powershell</span>
+                        <button class="code-copy" data-i18n="start.copy">Copy</button>
+                    </div>
+<pre><code># Install the runtime into your Python 3.10+ once
+python -m pip install ipykernel prime-agent-runtime
+
+# Bypass the broken bootstrap (persistent, user-level env var)
+[Environment]::SetEnvironmentVariable(
+  'PRIME_AGENT_KERNEL_PYTHON', (Get-Command python).Source, 'User')</code></pre>
+                </div>
+            </div>
+
+            <div class="qs-step reveal" style="max-width:780px;margin:0 auto 24px">
+                <h3 data-i18n="win.f2.h">2. Fix %%bash cells (shell-path quoting bug)</h3>
+                <p data-i18n="win.f2.p">%%bash cells fail with <code>Couldn't find program: 'C:\Essential...</code> when your Git Bash lives in a path with a space (e.g. <code>Program Files</code>). Fix: create a space-free junction and point <code>shellPath</code> at its forward-slash form, which prime-agent emits unquoted.</p>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-dots"><i></i><i></i><i></i></span>
+                        <span class="code-lang">powershell</span>
+                        <button class="code-copy" data-i18n="start.copy">Copy</button>
+                    </div>
+<pre><code># Junction:  C:\Users\you\gitbash  ->  your Git for Windows install
+$git = (Get-Item (Get-Command git).Source).Directory.Parent.FullName
+New-Item -ItemType Junction -Target $git -Path "$HOME\gitbash" | Out-Null
+
+# Point prime-agent at it (forward slashes, no space -> unquoted)
+$j = "$HOME\.prime\agent\settings.json"
+$d = Get-Content $j -Raw | ConvertFrom-Json
+$d.shellPath = ($HOME -replace '\\','/') + "/gitbash/bin/bash.exe"
+$d | ConvertTo-Json -Depth 10 | Set-Content $j -Encoding utf8</code></pre>
+                </div>
+            </div>
+
+            <div class="callout reveal">
+                <div class="callout-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24"><path d="M9 18h6M10 22h4M12 2a7 7 0 00-4 12.7c.6.5 1 1.3 1 2.1V18h6v-1.2c0-.8.4-1.6 1-2.1A7 7 0 0012 2z"/></svg></div>
+                <p data-i18n="win.tip">Restart prime-agent after these changes. If you sync settings across PCs with <a href="https://github.com/cskwork/prime-agent-sync" target="_blank">prime-agent-sync</a>, both fixes are re-applied automatically per machine on <code>pull</code>/<code>setup</code>.</p>
+            </div>
+        </div>
+    </section>
+
     <!-- Core Concepts (Tabs) -->
     <section class="section" id="concepts">
         <div class="container">

@@ -29,6 +29,7 @@ A single-page, fully interactive website that explains Prime Agent's architectur
 |---------|---------|
 | **What is Prime Agent?** | Overview of the 6 key features |
 | **Quick Start** | 3-step setup (install, authenticate, start) |
+| **Windows Setup** | Two one-time fixes for the IPython kernel + `%%bash` cells on Windows |
 | **Core Concepts** | Single-tool design, recursive agents, persistent state, skills |
 | **Architecture** | Interactive diagram: Client → Supervisor → Worker → Session → Kernel |
 | **RLM Programming Model** | The RLM loop, host bridge, delegation flow |

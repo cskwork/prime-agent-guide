@@ -48,13 +48,23 @@ const translations = {
         "start.title": "Quick Start",
         "start.desc": "From zero to a working Prime Agent session in under a minute.",
         "start.s1.title": "Install",
-        "start.s1.desc": "Install on Linux or macOS with a single command:",
+        "start.s1.desc": "Install on Linux or macOS with a single command (Windows: see Windows Setup below):",
         "start.s2.title": "Authenticate",
         "start.s2.desc": "Use your subscription or set an API key:",
         "start.s3.title": "Start Working",
         "start.s3.desc": "Run it in your project and just start talking:",
         "start.copy": "Copy",
         "start.tip": "The Python kernel runtime is set up automatically on first invocation. Set PRIME_AGENT_KERNEL_PYTHON to use an existing Python environment with ipykernel.",
+
+        // Windows setup
+        "win.tag": "Windows",
+        "win.title": "Windows Setup",
+        "win.desc": "Prime Agent runs on Windows via Git Bash. Two upstream bugs need a one-time fix so the IPython kernel and %%bash cells work.",
+        "win.f1.h": "1. Fix the IPython kernel (bootstrap path bug)",
+        "win.f1.p": "prime-agent's first-run bootstrap looks for a Unix venv path (bin/python), which doesn't exist on Windows (Scripts\\python.exe) \u2014 so the kernel never starts. Bypass it by pointing PRIME_AGENT_KERNEL_PYTHON at a Python that already has ipykernel + prime-agent-runtime.",
+        "win.f2.h": "2. Fix %%bash cells (shell-path quoting bug)",
+        "win.f2.p": "%%bash cells fail with \"Couldn't find program: 'C:\\Essential...\" when your Git Bash lives in a path with a space (e.g. Program Files). Fix: create a space-free junction and set shellPath to its forward-slash form, which prime-agent emits unquoted.",
+        "win.tip": "Restart prime-agent after these changes. If you sync settings across PCs with prime-agent-sync, both fixes are re-applied automatically per machine on pull/setup.",
 
         // Concepts
         "concepts.tag": "Fundamentals",
@@ -287,13 +297,23 @@ const translations = {
         "start.title": "퀵 스타트",
         "start.desc": "1분 안에 Prime Agent 세션을 시작하세요.",
         "start.s1.title": "설치",
-        "start.s1.desc": "Linux 또는 macOS에서 한 번의 명령으로 설치:",
+        "start.s1.desc": "Linux 또는 macOS에서 한 번의 명령으로 설치 (Windows: 아래 Windows 설정 참조):",
         "start.s2.title": "인증",
         "start.s2.desc": "구독을 사용하거나 API 키를 설정하세요:",
         "start.s3.title": "작업 시작",
         "start.s3.desc": "프로젝트에서 실행하고 대화를 시작하세요:",
         "start.copy": "복사",
         "start.tip": "Python 커널 런타임은 첫 호출 시 자동으로 설정됩니다. PRIME_AGENT_KERNEL_PYTHON을 설정하여 ipykernel이 있는 기존 Python 환경을 사용할 수 있습니다.",
+
+        // Windows 설정
+        "win.tag": "Windows",
+        "win.title": "Windows 설정",
+        "win.desc": "Prime Agent는 Git Bash를 통해 Windows에서 실행됩니다. IPython 커널과 %%bash 셀이 작동하려면 두 가지 업스트림 버그를 일회성으로 수정해야 합니다.",
+        "win.f1.h": "1. IPython 커널 수정 (부트스트랩 경로 버그)",
+        "win.f1.p": "prime-agent의 첫 실행 부트스트랩은 Unix venv 경로(bin/python)를 찾지만, Windows에는 존재하지 않으므로(Scripts\\python.exe) 커널이 시작되지 않습니다. ipykernel + prime-agent-runtime이 이미 설치된 Python을 PRIME_AGENT_KERNEL_PYTHON으로 지정하여 우회하세요.",
+        "win.f2.h": "2. %%bash 셀 수정 (셸 경로 인용 버그)",
+        "win.f2.p": "Git Bash가 공백이 있는 경로(예: Program Files)에 설치된 경우 %%bash 셀이 \"Couldn't find program: 'C:\\Essential...\" 오류로 실패합니다. 공백 없는 정션(junction)을 만들고 shellPath를 슬래시 형태로 설정하면 prime-agent가 인용 부호 없이 내보냅니다.",
+        "win.tip": "이 변경 후 prime-agent를 다시 시작하세요. prime-agent-sync로 PC 간 설정을 동기화하면 pull/setup 시 두 수정 사항이 각 머신에 자동으로 다시 적용됩니다.",
 
         // Concepts
         "concepts.tag": "기본 개념",
